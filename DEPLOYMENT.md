@@ -4,6 +4,86 @@ Complete deployment guide for the Concierge Agent system with Amplify backend, C
 
 ## Prerequisites
 
+# Update package list
+sudo yum update -y
+# OR for newer systems:
+sudo dnf update -y
+
+# Install basic tools
+sudo yum install -y curl wget unzip git
+# OR:
+sudo dnf install -y curl wget unzip git
+
+# Install Node.js v20
+curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -
+sudo yum install -y nodejs
+# OR:
+sudo dnf install -y nodejs
+
+# Install AWS CLI v2
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+rm -rf awscliv2.zip aws/
+
+# Install Docker
+sudo yum install -y yum-utils
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sudo yum install -y docker-ce docker-ce-cli containerd.io
+# OR for dnf:
+sudo dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sudo dnf install -y docker-ce docker-ce-cli containerd.io
+
+# Start and enable Docker
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo usermod -aG docker $USER
+
+# Install jq
+sudo yum install -y jq
+# OR:
+sudo dnf install -y jq
+
+# Check your architecture first
+uname -m
+
+# Remove the broken AWS CLI
+sudo rm -rf /usr/local/aws-cli /usr/local/bin/aws /usr/local/bin/aws_completer
+
+# Install via yum (automatically gets correct architecture)
+sudo yum install -y awscli
+
+# Or if you need v2, install the correct architecture
+# For ARM64 (if uname -m shows aarch64):
+# curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
+# For x86_64 (if uname -m shows x86_64):
+# curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+# unzip awscliv2.zip && sudo ./aws/install && rm -rf awscliv2.zip aws/
+
+# Install Docker
+sudo yum install -y docker
+
+# Start Docker service
+sudo service docker start
+
+# Enable Docker to start on boot
+sudo chkconfig docker on
+
+# Add user to docker group
+sudo usermod -aG docker ec2-user
+
+# You'll need to log out and back in for docker group to take effect
+
+# Check docker service status
+sudo service docker status
+
+# Start docker if it's not running
+sudo service docker start
+
+# Then try the newgrp command
+newgrp docker
+
+
 ### Required Tools
 - **Node.js**: v18+ (v20 recommended)
 - **npm**: v9+
