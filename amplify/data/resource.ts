@@ -47,6 +47,20 @@ const schema = a.schema({
   .secondaryIndexes((index: any) => [
     index('user_id')  // GSI for fast user queries
   ]),
+
+  // Feedback model - for user feedback and ratings
+  Feedback: a.model({
+    id: a.id().required(),           // AppSync auto-generated UUID
+    user_id: a.string().required(),  // User identifier
+    feedback_type: a.string().required(), // Type of feedback
+    rating: a.string(),              // Rating score
+    comment: a.string(),             // User comment
+    created_at: a.string(),          // Creation timestamp
+  })
+  .authorization((allow: any) => [allow.authenticated()])
+  .secondaryIndexes((index: any) => [
+    index('user_id')  // GSI for fast user queries
+  ]),
 })
 
 export type Schema = ClientSchema<typeof schema>
