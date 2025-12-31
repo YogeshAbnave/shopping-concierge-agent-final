@@ -106,20 +106,14 @@ new CfnOutput(backend.stack, 'MachineClientIdExport', {
 });
 
 // Table exports with deployment ID
-new CfnOutput(backend.stack, 'UserProfileTableNameExport', {
-  value: backend.data.resources.tables['UserProfile'].tableName,
-  exportName: `ConciergeAgent-${deploymentId}-Data-UserProfileTableName`,
-  description: 'DynamoDB UserProfile table name (unique per deployment)'
-});
-
 new CfnOutput(backend.stack, 'WishlistTableNameExport', {
   value: backend.data.resources.tables['Wishlist'].tableName,
   exportName: `ConciergeAgent-${deploymentId}-Data-WishlistTableName`,
   description: 'DynamoDB Wishlist table name (unique per deployment)'
 });
 
-new CfnOutput(backend.stack, 'FeedbackTableNameExport', {
-  value: backend.data.resources.tables['Feedback'].tableName,
-  exportName: `ConciergeAgent-${deploymentId}-Data-FeedbackTableName`,
-  description: 'DynamoDB Feedback table name (unique per deployment)'
+new CfnOutput(backend.stack, 'BookingsTableNameExport', {
+  value: backend.data.resources.tables['Bookings'].tableName,
+  exportName: `ConciergeAgent-${deploymentId}-Data-BookingsTableName`,
+  description: 'DynamoDB Bookings table name (unique per deployment)'
 });
