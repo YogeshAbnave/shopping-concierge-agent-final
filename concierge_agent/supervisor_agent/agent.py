@@ -34,7 +34,7 @@ MEMORY_ID = os.getenv("MEMORY_ID")
 
 # Initialize bedrock model - Claude 3.5 Haiku for routing/coordination
 bedrock_model = BedrockModel(
-    model_id="anthropic.claude-3-5-haiku-20241022-v1:0",
+    model_id="us.anthropic.claude-3-5-haiku-20241022-v1:0",
     region_name=REGION,
     temperature=0.1,
 )
@@ -112,6 +112,7 @@ def create_supervisor_agent(user_id: str, session_id: str) -> Agent:
     base_prompt = get_prompt("travel_agent_supervisor").format(
         user_profile=user_profile
     )
+    logger.info(f"Base prompt length: {len(base_prompt)}")
 
     # Configure AgentCore Memory integration
     agentcore_memory_config = AgentCoreMemoryConfig(
@@ -123,6 +124,8 @@ def create_supervisor_agent(user_id: str, session_id: str) -> Agent:
     )
 
     logger.info("Creating supervisor agent with session manager...")
+    logger.info(f"Model ID: {bedrock_model.model_id}")
+    logger.info(f"Region: {bedrock_model.region_name}")
 
     # Create agent with cart and shopping subagents
     agent = Agent(
@@ -164,12 +167,33 @@ async def agent_stream(payload):
             f"Starting streaming invocation for user: {user_id}, session: {session_id}"
         )
         logger.info(f"Query: {user_query}")
+        logger.info(f"Region: {REGION}, Memory ID: {MEMORY_ID}")
 
         agent = create_supervisor_agent(user_id, session_id)
+        logger.info("Agent created successfully, starting stream...")
 
-        # Use the agent's stream_async method for true token-level streaming
-        async for event in agent.stream_async(user_query):
-            yield event
+        # Test if the agent can respond at all
+        try:
+            # Use the agent's stream_async method for true token-level streaming
+            event_count = 0
+            async for event in agent.stream_async(user_query):
+                event_count += 1
+                logger.info(f"Event {event_count}: {event}")
+                yield event
+            
+            logger.info(f"Stream completed with {event_count} events")
+            
+            # If no events were yielded, provide a fallback response
+            if event_count == 0:
+                logger.warning("No events yielded from agent stream, providing fallback")
+                yield {
+                    "data": "I'm having trouble processing your request right now. Let me try to help you find shoes. Could you please be more specific about what type of shoes you're looking for?"
+                }
+        except Exception as stream_error:
+            logger.error(f"Stream error: {stream_error}")
+            yield {
+                "data": f"I encountered an issue while processing your request: {str(stream_error)}. Please try again."
+            }
 
     except Exception as e:
         error_message = str(e)
