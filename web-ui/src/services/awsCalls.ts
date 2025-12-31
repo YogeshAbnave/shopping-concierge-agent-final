@@ -533,8 +533,31 @@ export const invokeAgentCore = async (
           },
         ]);
       }
-    } catch (streamError) {
+    } catch (streamError: unknown) {
       console.error('Error processing agent response stream:', streamError);
+      
+      // Handle specific Bedrock validation errors
+      const errorMessage = streamError instanceof Error ? streamError.message : String(streamError);
+      if (errorMessage.includes('toolResult blocks') && errorMessage.includes('exceeds')) {
+        console.warn('Detected toolResult/toolUse mismatch - suggesting session reset');
+        
+        setAnswers((prevState) => [
+          ...prevState,
+          {
+            id: generateId(),
+            role: 'assistant',
+            content: 'I encountered a technical issue with the conversation history. Please refresh the page to start a new session, or try your request again.',
+            isStreaming: false,
+            status: 'error'
+          },
+        ]);
+        
+        return {
+          sessionId: sessionId,
+          completion: 'Session reset required due to conversation history mismatch',
+        };
+      }
+      
       throw streamError;
     }
 
@@ -577,6 +600,14 @@ export const invokeAgentCore = async (
     
     throw error;
   }
+};
+
+/**
+ * Reset session to handle conversation history issues
+ */
+export const resetSession = () => {
+  // Generate new session ID to force fresh conversation
+  return `session_${Date.now()}_${Math.random().toString(36).substring(2)}`;
 };
 
 /**

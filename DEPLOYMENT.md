@@ -9,7 +9,138 @@ Complete deployment guide for the Concierge Agent system with Amplify backend, C
 - **npm**: v9+
 - **AWS CLI**: v2+ configured with credentials
 - **Docker**: For building agent container images
-- **jq**: For JSON parsing - `brew install jq` (macOS) or `apt-get install jq` (Linux)
+- **jq**: For JSON parsing
+  - macOS: `brew install jq`
+  - Linux: `apt-get install jq` (Debian/Ubuntu) or `yum install jq` (RHEL/CentOS)
+  - Windows: Download from [GitHub releases](https://github.com/jqlang/jq/releases) or install via [Chocolatey](https://chocolatey.org/) with `choco install jq` or via [Scoop](https://scoop.sh/) with `scoop install jq`
+
+### EC2 Instance Installation
+
+For EC2 instances, you can use the automated installation script:
+
+```bash
+# Download and run the installation script
+chmod +x scripts/install-prerequisites-ec2.sh
+./scripts/install-prerequisites-ec2.sh
+```
+
+**Or install manually with these commands:**
+
+#### Amazon Linux 2 / Amazon Linux 2023
+
+```bash
+# Update system
+sudo yum update -y
+
+# Install jq
+sudo yum install -y jq
+
+# Install Docker
+sudo yum install -y docker
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo usermod -a -G docker $USER
+
+# Install Node.js v20 and npm
+curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -
+sudo yum install -y nodejs
+
+# Install AWS CLI v2 (detect architecture)
+ARCH=$(uname -m)
+if [ "$ARCH" == "x86_64" ]; then
+    AWS_CLI_ARCH="x86_64"
+elif [ "$ARCH" == "aarch64" ] || [ "$ARCH" == "arm64" ]; then
+    AWS_CLI_ARCH="aarch64"
+else
+    echo "Unsupported architecture: $ARCH"
+    exit 1
+fi
+
+# Remove existing AWS CLI if installed (wrong architecture)
+sudo rm -rf /usr/local/aws-cli /usr/local/bin/aws /usr/local/bin/aws_completer 2>/dev/null || true
+sudo yum remove -y awscli 2>/dev/null || true
+
+curl "https://awscli.amazonaws.com/awscli-exe-linux-${AWS_CLI_ARCH}.zip" -o "/tmp/awscliv2.zip"
+cd /tmp
+unzip awscliv2.zip
+sudo ./aws/install
+rm -rf awscliv2.zip aws/
+cd -
+
+# Install unzip (if needed)
+sudo yum install -y unzip
+
+# Configure AWS CLI (enter your credentials when prompted)
+aws configure
+
+# Log out and back in for Docker group changes, then verify
+exit
+# SSH back in, then:
+docker ps
+```
+
+#### Ubuntu
+
+```bash
+# Update system
+sudo apt-get update -y
+sudo apt-get upgrade -y
+
+# Install jq
+sudo apt-get install -y jq
+
+# Install Docker
+sudo apt-get install -y docker.io
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo usermod -a -G docker $USER
+
+# Install Node.js v20 and npm
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# Install AWS CLI v2 (detect architecture)
+ARCH=$(uname -m)
+if [ "$ARCH" == "x86_64" ]; then
+    AWS_CLI_ARCH="x86_64"
+elif [ "$ARCH" == "aarch64" ] || [ "$ARCH" == "arm64" ]; then
+    AWS_CLI_ARCH="aarch64"
+else
+    echo "Unsupported architecture: $ARCH"
+    exit 1
+fi
+
+# Remove existing AWS CLI if installed (wrong architecture)
+sudo rm -rf /usr/local/aws-cli /usr/local/bin/aws /usr/local/bin/aws_completer 2>/dev/null || true
+sudo apt-get remove -y awscli 2>/dev/null || true
+
+curl "https://awscli.amazonaws.com/awscli-exe-linux-${AWS_CLI_ARCH}.zip" -o "/tmp/awscliv2.zip"
+cd /tmp
+unzip awscliv2.zip
+sudo ./aws/install
+rm -rf awscliv2.zip aws/
+cd -
+
+# Install unzip (if needed)
+sudo apt-get install -y unzip
+
+# Configure AWS CLI (enter your credentials when prompted)
+aws configure
+
+# Log out and back in for Docker group changes, then verify
+exit
+# SSH back in, then:
+docker ps
+```
+
+**After installation, verify all tools:**
+```bash
+jq --version
+docker --version
+node --version
+npm --version
+aws --version
+```
 
 ### AWS Account Requirements
 - AWS account with appropriate permissions
@@ -33,6 +164,10 @@ The shopping assistant requires SERP API for product search functionality.
 1. **Sign up** at: https://serpapi.com/users/sign_up  # pragma: allowlist secret
 2. **Configure** using the setup script:
    ```bash
+   # Make the script executable (if needed)
+   chmod +x ./scripts/set-api-keys.sh
+   
+   # Run the script
    ./scripts/set-api-keys.sh
    ```
    This will prompt you for your API key and store it in AWS Systems Manager Parameter Store as `/concierge-agent/shopping/serp-api-key`

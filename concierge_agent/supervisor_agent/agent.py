@@ -135,6 +135,9 @@ def create_supervisor_agent(user_id: str, session_id: str) -> Agent:
             "user.id": user_id,
             "session.id": session_id,
         },
+        # Add conversation validation settings
+        max_conversation_turns=50,  # Prevent overly long conversations
+        validate_tool_calls=True,   # Enable tool call validation
     )
     logger.info("✅ Agent created with cart and shopping subagents")
 
@@ -169,9 +172,31 @@ async def agent_stream(payload):
             yield event
 
     except Exception as e:
-        logger.error(f"Error in agent_stream: {e}")
+        error_message = str(e)
+        logger.error(f"Error in agent_stream: {error_message}")
         traceback.print_exc()
-        yield {"status": "error", "error": str(e)}
+        
+        # Handle specific Bedrock validation errors
+        if "toolResult blocks" in error_message and "exceeds" in error_message:
+            logger.warning("Detected toolResult/toolUse mismatch - attempting recovery")
+            try:
+                # Create a fresh agent instance to reset conversation state
+                fresh_agent = create_supervisor_agent(user_id, f"{session_id}_recovery")
+                logger.info("Created fresh agent instance for recovery")
+                
+                # Retry with the fresh agent
+                async for event in fresh_agent.stream_async(user_query):
+                    yield event
+                return
+            except Exception as recovery_error:
+                logger.error(f"Recovery attempt failed: {recovery_error}")
+                yield {
+                    "status": "error", 
+                    "error": "I encountered a technical issue. Please try starting a new conversation."
+                }
+                return
+        
+        yield {"status": "error", "error": error_message}
 
 
 if __name__ == "__main__":
