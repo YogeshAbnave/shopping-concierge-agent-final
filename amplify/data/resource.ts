@@ -1,6 +1,21 @@
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend'
 
 const schema = a.schema({
+  // UserProfile model - for user information and preferences
+  UserProfile: a.model({
+    id: a.id().required(),           // AppSync auto-generated UUID (Primary Key)
+    user_id: a.string().required(),  // User identifier (attribute)
+    email: a.string(),               // User email
+    name: a.string(),                // User name
+    preferences: a.string(),         // User preferences (JSON string)
+    created_at: a.string(),          // Creation timestamp
+    updated_at: a.string(),          // Last update timestamp
+  })
+  .authorization((allow: any) => [allow.authenticated()])
+  .secondaryIndexes((index: any) => [
+    index('user_id')  // GSI for fast user queries
+  ]),
+
   // Wishlist model - for cart functionality with multiple items per user
   Wishlist: a.model({
     id: a.id().required(),           // AppSync auto-generated UUID (Primary Key)
