@@ -16,8 +16,8 @@ export class CartStack extends BaseMcpStack {
       agentCodePath: 'concierge_agent/mcp_cart_tools',
       ssmParameters: [],
       environmentVariables: {
-        WISHLIST_TABLE_NAME: cdk.Fn.importValue(`ConciergeAgent-${DEPLOYMENT_ID}-Data-WishlistTableName`),
-        BOOKINGS_TABLE_NAME: cdk.Fn.importValue(`ConciergeAgent-${DEPLOYMENT_ID}-Data-BookingsTableName`)
+        USER_PROFILE_TABLE_NAME: cdk.Fn.importValue(`ConciergeAgent-${DEPLOYMENT_ID}-Data-UserProfileTableName`),
+        WISHLIST_TABLE_NAME: cdk.Fn.importValue(`ConciergeAgent-${DEPLOYMENT_ID}-Data-WishlistTableName`)
       },
       additionalPolicies: [
         new iam.PolicyStatement({
