@@ -1,0 +1,2204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgentCore AI Shopping Concierge - Executive Presentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-size: 18px; /* Increased base font size */
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            background: white;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Navigation Arrows */
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(30, 60, 114, 0.9);
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .nav-arrow:hover {
+            background: rgba(30, 60, 114, 1);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .nav-arrow:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: translateY(-50%) scale(0.9);
+        }
+
+        .nav-arrow.prev {
+            left: 30px;
+        }
+
+        .nav-arrow.next {
+            right: 30px;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            z-index: 1001;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .slide {
+            display: none !important;
+            padding: 40px 60px;
+            min-height: calc(100vh - 120px);
+            max-height: calc(100vh - 120px);
+            animation: fadeIn 0.5s;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .slide.active {
+            display: block !important;
+        }
+
+        /* Image Styles */
+        .architecture-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            border: 3px solid #1e3c72;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .architecture-image:hover {
+            transform: scale(1.02);
+        }
+
+        .image-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .image-caption {
+            font-size: 1.1em; /* Increased from 0.9em */
+            color: #666;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        /* Full-screen image modal */
+        .image-modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            cursor: pointer;
+        }
+
+        .image-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-image {
+            max-width: 95%;
+            max-height: 95%;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10000;
+        }
+
+        .modal-close:hover {
+            color: #ccc;
+        }
+
+        /* Architecture diagram styling */
+        .architecture-diagram {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em; /* Increased from 0.9em */
+            overflow-x: auto;
+            border: 2px solid #1e3c72;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .architecture-diagram pre {
+            margin: 0;
+            color: #1e3c72;
+            font-weight: 600;
+            line-height: 1.6;
+        }
+
+        /* Content with image layout */
+        .content-with-image {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            margin: 30px 0;
+        }
+
+        .content-with-image.reverse {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        /* Navigation hint */
+        .navigation-hint {
+            position: fixed;
+            bottom: 140px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            z-index: 1000;
+            opacity: 0.8;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Typography */
+        h1 {
+            color: #1e3c72;
+            font-size: 4.2em; /* Increased from 3.2em */
+            margin-bottom: 20px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        h2 {
+            color: #2a5298;
+            font-size: 3.4em; /* Increased from 2.8em */
+            margin-bottom: 30px;
+            font-weight: 600;
+            border-bottom: 4px solid #1e3c72;
+            padding-bottom: 15px;
+        }
+
+        h3 {
+            color: #1e3c72;
+            font-size: 2.2em; /* Increased from 1.8em */
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.8em; /* Increased from 1.4em */
+            color: #555;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        /* Layout Components */
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #1e3c72;
+        }
+
+        .slide-number {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.4em; /* Increased from 1.1em */
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+            margin: 30px 0;
+        }
+
+        .three-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        /* Executive Cards */
+        .exec-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #1e3c72;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .exec-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .exec-card h4 {
+            color: #1e3c72;
+            font-size: 1.7em; /* Increased from 1.4em */
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .exec-card p {
+            color: #555;
+            line-height: 1.6;
+            font-size: 1.3em; /* Increased from 1.05em */
+        }
+
+        /* Metrics */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .metric-number {
+            font-size: 3.8em; /* Increased from 3em */
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .metric-label {
+            font-size: 1.4em; /* Increased from 1.1em */
+            opacity: 0.9;
+        }
+
+        /* Lists */
+        .exec-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .exec-list li {
+            padding: 15px 0;
+            padding-left: 40px;
+            position: relative;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 1.3em; /* Increased from 1.1em */
+            line-height: 1.6;
+        }
+
+        .exec-list li:before {
+            content: "▶";
+            position: absolute;
+            left: 0;
+            top: 15px;
+            color: #1e3c72;
+            font-weight: bold;
+            font-size: 1.4em; /* Increased from 1.2em */
+        }
+
+        /* Highlight Boxes */
+        .highlight-box {
+            background: linear-gradient(135deg, #1e3c7215 0%, #2a529815 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            border-left: 6px solid #1e3c72;
+        }
+
+        .highlight-box h4 {
+            color: #1e3c72;
+            font-size: 1.6em; /* Increased from 1.3em */
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        /* Title Slide */
+        .title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 120px);
+            padding: 40px 60px;
+        }
+
+        .title-slide h1 {
+            font-size: 5.5em; /* Increased from 4.5em */
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .company-tagline {
+            font-size: 2.0em; /* Increased from 1.6em */
+            color: #666;
+            margin-top: 30px;
+            font-weight: 300;
+        }
+
+        /* Navigation */
+        .navigation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 60px;
+            background: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+        }
+
+        .nav-button {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 30px;
+            font-size: 1.4em; /* Increased from 1.1em */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(30, 60, 114, 0.4);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-counter {
+            font-size: 1.5em; /* Increased from 1.2em */
+            color: #666;
+            font-weight: 600;
+        }
+
+        /* Slide Indicators */
+        .slide-indicators {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+            background: rgba(0,0,0,0.7);
+            padding: 10px 20px;
+            border-radius: 25px;
+        }
+
+        .slide-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slide-dot.active {
+            background: #1e3c72;
+            transform: scale(1.3);
+        }
+
+        .slide-dot:hover {
+            background: rgba(255,255,255,0.7);
+        }
+
+        /* Roadmap Timeline */
+        .roadmap-timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .timeline-marker {
+            width: 20px;
+            height: 20px;
+            background: #1e3c72;
+            border-radius: 50%;
+            margin-right: 30px;
+            flex-shrink: 0;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-phase {
+            font-weight: 600;
+            color: #1e3c72;
+            font-size: 1.5em; /* Increased from 1.2em */
+            margin-bottom: 5px;
+        }
+
+        .timeline-description {
+            color: #666;
+            line-height: 1.5;
+            font-size: 1.2em; /* Added explicit font size */
+        }
+
+        /* Risk Matrix */
+        .risk-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .risk-item {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .risk-high {
+            border-color: #dc3545;
+            background: #fff5f5;
+        }
+
+        .risk-medium {
+            border-color: #ffc107;
+            background: #fffbf0;
+        }
+
+        .risk-low {
+            border-color: #28a745;
+            background: #f8fff8;
+        }
+
+        /* Slide Indicators */
+        .slide-indicators {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+            background: rgba(0,0,0,0.7);
+            padding: 10px 20px;
+            border-radius: 25px;
+        }
+
+        .slide-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slide-dot.active {
+            background: #1e3c72;
+            transform: scale(1.3);
+        }
+
+        .slide-dot:hover {
+            background: rgba(255,255,255,0.7);
+        }
+        @media (max-width: 768px) {
+            .two-column,
+            .three-column {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            h1 { font-size: 3.2em; } /* Increased from 2.5em */
+            h2 { font-size: 2.6em; } /* Increased from 2em */
+            
+            .slide {
+                padding: 20px 30px;
+                min-height: calc(100vh - 120px);
+            }
+            
+            .title-slide {
+                padding: 20px 30px;
+            }
+            
+            .navigation {
+                padding: 15px 30px;
+            }
+            
+            body {
+                font-size: 16px; /* Increased base mobile font size */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Navigation Arrows -->
+    <button class="nav-arrow prev" id="prevArrow" onclick="changeSlide(-1)">←</button>
+    <button class="nav-arrow next" id="nextArrow" onclick="changeSlide(1)">→</button>
+
+    <!-- Slide Indicators -->
+    <div class="slide-indicators" id="slideIndicators"></div>
+
+
+
+    <!-- Image Modal -->
+    <div class="image-modal" id="imageModal" onclick="closeImageModal()">
+        <span class="modal-close" onclick="closeImageModal()">&times;</span>
+        <img class="modal-image" id="modalImage" src="" alt="Full-screen view">
+    </div>
+
+    <div class="presentation-container">
+        <!-- Slide 1: Title & Purpose -->
+        <div class="slide active title-slide">
+            <h1>AgentCore AI Shopping Concierge</h1>
+            <p class="subtitle">Transforming E-commerce Through Conversational AI</p>
+            <div class="image-container" style="margin: 30px 0;">
+                <img src="welcome_page.png" alt="AgentCore AI Shopping Concierge Welcome" class="architecture-image" onclick="openImageModal(this.src, this.alt)" style="max-width: 60%; height: auto;" />
+            </div>
+            <div class="company-tagline">
+                <p>Next-Generation Shopping Experience</p>
+                <p>Powered by AWS Bedrock & Multi-Agent Architecture</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Business Challenge & Market Opportunity -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Business Challenge & Market Opportunity</h2>
+                <div class="slide-number">02</div>
+            </div>
+
+            <div class="two-column">
+                <div>
+                    <h3>Current E-commerce Pain Points</h3>
+                    <div class="exec-card">
+                        <h4>Customer Challenges</h4>
+                        <ul class="exec-list">
+                            <li>70% of online carts are abandoned</li>
+                            <li>Information overload creates decision paralysis</li>
+                            <li>23 minutes average product search time</li>
+                            <li>89% want personalized experiences</li>
+                        </ul>
+                    </div>
+                    <div class="exec-card">
+                        <h4>Business Impact</h4>
+                        <ul class="exec-list">
+                            <li>High customer service costs ($15/interaction)</li>
+                            <li>Complex purchase journeys reduce profitability</li>
+                            <li>Traditional interfaces fail to differentiate</li>
+                        </ul>
+                    </div>
+                </div>
+                <div>
+                    <h3>Market Opportunity</h3>
+                    <div class="metrics-grid" style="grid-template-columns: 1fr 1fr;">
+                        <div class="metric-card">
+                            <span class="metric-number">$6.2T</span>
+                            <div class="metric-label">Global E-commerce Market</div>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-number">25%</span>
+                            <div class="metric-label">Conversational Commerce Growth</div>
+                        </div>
+                    </div>
+                    
+                    <div class="exec-card">
+                        <h4>Why Now?</h4>
+                        <ul class="exec-list">
+                            <li>AWS Bedrock democratizes enterprise AI</li>
+                            <li>Consumer acceptance of AI assistants</li>
+                            <li>Payment tokenization enables secure transactions</li>
+                            <li>Multi-agent architectures proven at scale</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>The Solution Gap</h4>
+                <p>No existing solution combines conversational AI with secure payment processing and multi-agent orchestration for complete shopping experiences. This creates a unique window for market leadership in agentic commerce.</p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Proposed Solution & Value Proposition -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Proposed Solution & Value Proposition</h2>
+                <div class="slide-number">03</div>
+            </div>
+            
+            <div class="highlight-box">
+                <h4>AgentCore AI Shopping Concierge</h4>
+                <p>An intelligent, multi-agent platform that transforms online shopping through natural conversation, personalized recommendations, and secure payment processing.</p>
+            </div>
+
+            <div class="three-column">
+                <div class="exec-card">
+                    <h4>Conversational Interface</h4>
+                    <p>Natural language shopping assistant that understands context, preferences, and complex requirements</p>
+                </div>
+                <div class="exec-card">
+                    <h4>Multi-Agent Architecture</h4>
+                    <p>Specialized agents for product discovery, cart management, and payment processing</p>
+                </div>
+                <div class="exec-card">
+                    <h4>Secure Payments</h4>
+                    <p>Visa tokenization ensures PCI compliance and secure transaction processing</p>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <span class="metric-number">25%</span>
+                    <div class="metric-label">Conversion Increase</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">40%</span>
+                    <div class="metric-label">Higher Customer LTV</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">60%</span>
+                    <div class="metric-label">Support Cost Reduction</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">285%</span>
+                    <div class="metric-label">3-Year ROI</div>
+                </div>
+            </div>
+
+            <div class="two-column">
+                <div>
+                    <h3>Core Capabilities</h3>
+                    <ul class="exec-list">
+                        <li>Intelligent product search and recommendations</li>
+                        <li>Real-time cart management and optimization</li>
+                        <li>Secure payment processing with tokenization</li>
+                        <li>Persistent conversation memory</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Strategic Advantages</h3>
+                    <ul class="exec-list">
+                        <li>First-mover advantage in agentic commerce</li>
+                        <li>Enterprise-grade security and compliance</li>
+                        <li>Scalable AWS-native architecture</li>
+                        <li>Rapid deployment and market entry</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Detailed Use Cases & User Scenarios -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Detailed Use Cases & User Scenarios</h2>
+                <div class="slide-number">04</div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>Real-World Application Scenarios</h4>
+                <p>Comprehensive use cases demonstrating the platform's versatility across different shopping contexts and user needs.</p>
+            </div>
+
+            <div class="two-column">
+                <div>
+                    <h3>Primary Use Cases</h3>
+                    <div class="exec-card">
+                        <h4>🛍️ Conversational Product Discovery</h4>
+                        <p><strong>Scenario:</strong> "Find me wireless headphones under $200 for working out"</p>
+                        <ul class="exec-list">
+                            <li>Natural language product search via SERP API</li>
+                            <li>Intelligent filtering by price, features, reviews</li>
+                            <li>Personalized recommendations based on user history</li>
+                            <li>Real-time price and availability checking</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="exec-card">
+                        <h4>🛒 Smart Cart Management</h4>
+                        <p><strong>Scenario:</strong> "Add the Sony headphones to my cart and show me the total"</p>
+                        <ul class="exec-list">
+                            <li>Voice-activated cart operations</li>
+                            <li>Automatic price calculations and tax estimates</li>
+                            <li>Cross-sell and upsell recommendations</li>
+                            <li>Persistent cart across devices and sessions</li>
+                        </ul>
+                    </div>
+
+                    <div class="exec-card">
+                        <h4>💳 Secure Payment Processing</h4>
+                        <p><strong>Scenario:</strong> "Complete my purchase using my saved Visa card"</p>
+                        <ul class="exec-list">
+                            <li>Visa tokenization for PCI compliance</li>
+                            <li>One-click checkout with saved payment methods</li>
+                            <li>Real-time fraud detection and prevention</li>
+                            <li>Automated receipt generation and email delivery</li>
+                        </ul>
+                    </div>
+                </div>
+                <div>
+                    <h3>Advanced Scenarios</h3>
+                    <div class="exec-card">
+                        <h4>🎒 Intelligent Packing Lists</h4>
+                        <p><strong>Scenario:</strong> "Create a packing list for a week in Hawaii with product recommendations"</p>
+                        <ul class="exec-list">
+                            <li>Context-aware item suggestions by destination</li>
+                            <li>Weather-based clothing recommendations</li>
+                            <li>Activity-specific gear suggestions</li>
+                            <li>Direct product links with price comparisons</li>
+                        </ul>
+                    </div>
+
+                    <div class="exec-card">
+                        <h4>🔄 Multi-Session Shopping Journey</h4>
+                        <p><strong>Scenario:</strong> Research on mobile, purchase on desktop</p>
+                        <ul class="exec-list">
+                            <li>Persistent conversation memory across devices</li>
+                            <li>Synchronized cart and wishlist management</li>
+                            <li>Seamless handoff between platforms</li>
+                            <li>Progressive preference learning</li>
+                        </ul>
+                    </div>
+
+                    <div class="exec-card">
+                        <h4>👥 Business & Enterprise Shopping</h4>
+                        <p><strong>Scenario:</strong> "Order office supplies for 50 employees within budget"</p>
+                        <ul class="exec-list">
+                            <li>Bulk ordering with volume discounts</li>
+                            <li>Budget constraint enforcement</li>
+                            <li>Approval workflow integration</li>
+                            <li>Expense tracking and reporting</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <span class="metric-number">15</span>
+                    <div class="metric-label">Avg Messages Per Session</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">12min</span>
+                    <div class="metric-label">Avg Session Duration</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">85%</span>
+                    <div class="metric-label">Task Completion Rate</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">4.7/5</span>
+                    <div class="metric-label">User Satisfaction Score</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: System Architecture & Technology Stack -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>System Architecture & Technology Stack</h2>
+                <div class="slide-number">05</div>
+            </div>
+
+            <div class="content-with-image">
+                <div>
+                    <h3>High-Level Architecture</h3>
+                    <div class="architecture-diagram">
+                        <pre>Frontend (React/TypeScript)
+    ↓ (GraphQL/REST)
+AWS Amplify (Auth/Data)
+    ↓ (JWT/Cognito)
+AgentCore Gateway
+    ↓ (OAuth/MCP)
+Supervisor Agent (Python/Strands)
+    ↓ (Tool calls)
+MCP Servers (Shopping/Cart/Payment)
+    ↓ (API calls)
+External APIs (SERP/Visa) + DynamoDB</pre>
+                    </div>
+                    
+                    <div class="two-column" style="grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="exec-card">
+                            <h4>🎯 Supervisor Agent</h4>
+                            <p>Main orchestrator using Claude 3.5 Sonnet v2</p>
+                        </div>
+                        <div class="exec-card">
+                            <h4>🛍️ Shopping Sub-Agent</h4>
+                            <p>Product search via SERP API integration</p>
+                        </div>
+                        <div class="exec-card">
+                            <h4>🛒 Cart Sub-Agent</h4>
+                            <p>Shopping cart and checkout workflows</p>
+                        </div>
+                        <div class="exec-card">
+                            <h4>💳 Payment Sub-Agent</h4>
+                            <p>Secure Visa tokenization processing</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="Shopping_Agent_VISA.png" alt="Shopping Agent Architecture" class="architecture-image" onclick="openImageModal(this.src, this.alt)" />
+                    <div class="image-caption">Complete System Architecture - Click to view full-screen</div>
+                </div>
+            </div>
+
+            <div class="two-column">
+                <div>
+                    <h3>Core Technologies</h3>
+                    <div class="exec-card">
+                        <h4>🎨 Frontend Stack</h4>
+                        <p>React 18, TypeScript, GraphQL, AWS AppSync</p>
+                    </div>
+                    <div class="exec-card">
+                        <h4>⚙️ Backend Stack</h4>
+                        <p>Python 3.13, Strands SDK, FastMCP, Docker ARM64</p>
+                    </div>
+                    <div class="exec-card">
+                        <h4>🤖 AI & AWS Services</h4>
+                        <p>Claude 3.5 Sonnet v2, AWS Bedrock, DynamoDB, Lambda, ECS Fargate</p>
+                    </div>
+                </div>
+                <div>
+                    <h3>Performance Metrics</h3>
+                    <div class="metrics-grid" style="grid-template-columns: 1fr 1fr;">
+                        <div class="metric-card">
+                            <span class="metric-number">&lt;2s</span>
+                            <div class="metric-label">Response Time</div>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-number">99.9%</span>
+                            <div class="metric-label">API Availability</div>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-number">10K</span>
+                            <div class="metric-label">Concurrent Users</div>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-number">100K</span>
+                            <div class="metric-label">Daily Requests</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: AWS Architecture & Data Flow -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>AWS Architecture & Data Flow</h2>
+                <div class="slide-number">06</div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>Production-Ready AWS Implementation</h4>
+                <p>Scalable, secure, and cost-optimized architecture leveraging AWS managed services for enterprise-grade performance.</p>
+            </div>
+
+            <div class="architecture-diagram">
+                <pre>┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   React + TS    │───▶│   AWS Amplify    │───▶│  API Gateway    │
+│   Frontend      │    │   (Auth/CDN)     │    │   (REST/WS)     │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+                                                         │
+                       ┌─────────────────────────────────┼─────────────────────────────────┐
+                       │                                 ▼                                 │
+                       │                    ┌─────────────────┐                           │
+                       │                    │  ECS Fargate    │                           │
+                       │                    │ (Agent Runtime) │                           │
+                       │                    └─────────────────┘                           │
+                       │                             │                                     │
+        ┌──────────────▼──────────────┐             ▼              ┌─────────────────────▼──┐
+        │      AWS Bedrock            │    ┌─────────────────┐     │      DynamoDB          │
+        │   (Claude 3.5 Sonnet)      │◀───│ MCP Servers     │────▶│   (User/Cart/Txn)      │
+        │   (Haiku for simple)        │    │ (Docker ARM64)  │     │                        │
+        └─────────────────────────────┘    └─────────────────┘     └────────────────────────┘
+                                                    │
+                                           ┌────────▼────────┐
+                                           │  External APIs  │
+                                           │ SERP API + Visa │
+                                           └─────────────────┘</pre>
+            </div>
+
+            <div class="two-column">
+                <div>
+                    <h3>Core AWS Services</h3>
+                    <div class="exec-card">
+                        <h4>🚀 Compute & Runtime</h4>
+                        <ul class="exec-list">
+                            <li>ECS Fargate (ARM64 Graviton)</li>
+                            <li>Lambda for event processing</li>
+                            <li>Application Load Balancer</li>
+                        </ul>
+                    </div>
+                    <div class="exec-card">
+                        <h4>🧠 AI & Data</h4>
+                        <ul class="exec-list">
+                            <li>Bedrock (Claude 3.5 Sonnet v2)</li>
+                            <li>DynamoDB (NoSQL at scale)</li>
+                            <li>S3 (Static assets & logs)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div>
+                    <h3>Performance & Security</h3>
+                    <div class="exec-card">
+                        <h4>🔐 Security Stack</h4>
+                        <ul class="exec-list">
+                            <li>Cognito (Authentication)</li>
+                            <li>WAF (Web Application Firewall)</li>
+                            <li>VPC with private subnets</li>
+                        </ul>
+                    </div>
+                    <div class="exec-card">
+                        <h4>📊 Observability</h4>
+                        <ul class="exec-list">
+                            <li>CloudWatch (Metrics & Logs)</li>
+                            <li>X-Ray (Distributed Tracing)</li>
+                            <li>CloudTrail (Audit Logging)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="image-container" style="margin-top: 30px;">
+                <img src="shopping_data_flow.png" alt="Data Flow Diagram" class="architecture-image" onclick="openImageModal(this.src, this.alt)" />
+                <div class="image-caption">Detailed Data Flow Architecture - Click to view full-screen</div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Security, Compliance & Data Management -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Security, Compliance & Data Management</h2>
+                <div class="slide-number">07</div>
+            </div>
+
+            <div class="two-column">
+                <div>
+                    <h3>Security Framework</h3>
+                    <div class="exec-card">
+                        <h4>🛡️ Authentication & Authorization</h4>
+                        <p>AWS Cognito with JWT tokens, MFA support, role-based access control</p>
+                    </div>
+                    <div class="exec-card">
+                        <h4>🔐 Data Protection</h4>
+                        <p>Encryption at rest and in transit, PCI DSS compliance, Visa tokenization</p>
+                    </div>
+                    <div class="exec-card">
+                        <h4>🌐 Network Security</h4>
+                        <p>VPC isolation, WAF protection, API rate limiting, DDoS protection</p>
+                    </div>
+                </div>
+                <div>
+                    <h3>Data Lifecycle Management</h3>
+                    <div class="exec-card">
+                        <h4>Retention Policy</h4>
+                        <ul class="exec-list">
+                            <li>User messages: 7 years (GDPR compliant)</li>
+                            <li>Transaction data: 10 years (PCI DSS)</li>
+                            <li>Session data: 90 days (Privacy by design)</li>
+                            <li>System logs: 1 year (Operational needs)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="exec-card">
+                        <h4>Automated Transitions</h4>
+                        <ul class="exec-list">
+                            <li>Day 30: Standard → Standard-IA</li>
+                            <li>Day 90: Standard-IA → Glacier</li>
+                            <li>GDPR: User deletion within 30 days</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <span class="metric-number">99.9%</span>
+                    <div class="metric-label">Security SLA</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">99.9%</span>
+                    <div class="metric-label">Data Accuracy</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">24/7</span>
+                    <div class="metric-label">Monitoring Coverage</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">100%</span>
+                    <div class="metric-label">Audit Coverage</div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>Compliance & Monitoring</h4>
+                <div class="three-column">
+                    <div>
+                        <h4>Standards</h4>
+                        <ul class="exec-list">
+                            <li>PCI DSS Level 1</li>
+                            <li>GDPR compliance</li>
+                            <li>SOC 2 Type II</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Monitoring</h4>
+                        <ul class="exec-list">
+                            <li>CloudWatch dashboards</li>
+                            <li>X-Ray distributed tracing</li>
+                            <li>Real-time alerting</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Quality Assurance</h4>
+                        <ul class="exec-list">
+                            <li>Input validation layers</li>
+                            <li>Business rules enforcement</li>
+                            <li>Schema validation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Production-Grade Pricing & User Scaling -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Production-Grade Pricing & User Scaling</h2>
+                <div class="slide-number">08</div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>Complete Pricing Model with User Count Analysis</h4>
+                <p>Comprehensive cost breakdown showing how pricing scales with user growth, including all AWS services, instance costs, and production-grade infrastructure requirements.</p>
+            </div>
+
+            <!-- Pricing Chart by User Count -->
+            <div style="margin: 30px 0;">
+                <h3 style="text-align: center; color: #1e3c72; margin-bottom: 25px;">📊 Pricing Chart by User Count</h3>
+                
+                <div style="overflow-x: auto; margin: 20px 0;">
+                    <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.1);">
+                        <thead>
+                            <tr style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white;">
+                                <th style="padding: 15px; text-align: left; font-size: 1.1em; font-weight: 600;">User Tier</th>
+                                <th style="padding: 15px; text-align: center; font-size: 1.1em; font-weight: 600;">Monthly Users</th>
+                                <th style="padding: 15px; text-align: center; font-size: 1.1em; font-weight: 600;">Infrastructure Cost</th>
+                                <th style="padding: 15px; text-align: center; font-size: 1.1em; font-weight: 600;">AI Processing</th>
+                                <th style="padding: 15px; text-align: center; font-size: 1.1em; font-weight: 600;">External APIs</th>
+                                <th style="padding: 15px; text-align: center; font-size: 1.1em; font-weight: 600;">Total Monthly</th>
+                                <th style="padding: 15px; text-align: center; font-size: 1.1em; font-weight: 600;">Cost/User</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid #f0f0f0;">
+                                <td style="padding: 15px; font-weight: 600; color: #1e3c72;">🚀 Startup</td>
+                                <td style="padding: 15px; text-align: center; font-size: 1.1em;">1,000</td>
+                                <td style="padding: 15px; text-align: center; font-size: 1.1em;">$300</td>
+                                <td style="padding: 15px; text-align: center; font-size: 1.1em;">$85</td>
+                                <td style="padding: 15px; text-align: center; font-size: 1.1em;">$100</td>
+                                <td style="padding: 15px; text-align: center; font-size: 1.2em; font-weight: 600; color: #1e3c72;">$485</td>
+                                <td style="padding: 15px; text-align: center; font-size: 1.1em; color: #28a745; font-weight: 600;">$0.49</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #f0f0f0; background: #f8f9fa;">
+                                <td style="padding: 15px; font-weight: 600; color: #1e3c72;">📈 Growth</td>
+                                <td style="padding: 15px; text-align: center; font-size: 1.1em;">10,000</td>
+                                <td style="padding: 15px; text-align: center; font-size: 1.1em;">$957</td>
+                                <td style="padding: 15px; text-align: center; font-size: 1.1em;">$200</td>
+                                <td style="padding: 15px; text-align: center; font-size: 1.1em;">$454</td>
+                                <td style="padding: 15px; text-align: center; font-size: 1.2em; font-weight: 600; color: #1e3c72;">$1,611</td>
+                                <td style="padding: 15px; text-align: center; font-size: 1.1em; color: #28a745; font-weight: 600;">$0.16</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #f0f0f0;">
+                                <td style="padding: 15px; font-weight: 600; color: #1e3c72;">🏢 Scale</td>
+                                <td style="padding: 15px; text-align: center; font-size: 1.1em;">100,000</td>
+                                <td style="padding: 15px; text-align: center; font-size: 1.1em;">$5,200</td>
+                                <td style="padding: 15px; text-align: center; font-size: 1.1em;">$1,800</td>
+                                <td style="padding: 15px; text-align: center; font-size: 1.1em;">$1,750</td>
+                                <td style="padding: 15px; text-align: center; font-size: 1.2em; font-weight: 600; color: #1e3c72;">$8,750</td>
+                                <td style="padding: 15px; text-align: center; font-size: 1.1em; color: #28a745; font-weight: 600;">$0.09</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #f0f0f0; background: #f8f9fa;">
+                                <td style="padding: 15px; font-weight: 600; color: #1e3c72;">🌐 Enterprise</td>
+                                <td style="padding: 15px; text-align: center; font-size: 1.1em;">1,000,000</td>
+                                <td style="padding: 15px; text-align: center; font-size: 1.1em;">$28,000</td>
+                                <td style="padding: 15px; text-align: center; font-size: 1.1em;">$12,000</td>
+                                <td style="padding: 15px; text-align: center; font-size: 1.1em;">$5,000</td>
+                                <td style="padding: 15px; text-align: center; font-size: 1.2em; font-weight: 600; color: #1e3c72;">$45,000</td>
+                                <td style="padding: 15px; text-align: center; font-size: 1.1em; color: #28a745; font-weight: 600;">$0.045</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Instance Cost Breakdown -->
+            <div class="two-column" style="margin-top: 30px;">
+                <div>
+                    <h3>💻 Production Instance Costs (10K Users)</h3>
+                    <div style="background: white; border-radius: 10px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-bottom: 2px solid #1e3c72;">
+                                    <th style="padding: 10px; text-align: left; color: #1e3c72; font-size: 1.1em;">Service</th>
+                                    <th style="padding: 10px; text-align: right; color: #1e3c72; font-size: 1.1em;">Monthly Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #f0f0f0;">
+                                    <td style="padding: 8px; font-size: 1.0em;">ECS Fargate (2 vCPU, 4GB)</td>
+                                    <td style="padding: 8px; text-align: right; font-weight: 600;">$557</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #f0f0f0;">
+                                    <td style="padding: 8px; font-size: 1.0em;">DynamoDB (On-demand)</td>
+                                    <td style="padding: 8px; text-align: right; font-weight: 600;">$125</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #f0f0f0;">
+                                    <td style="padding: 8px; font-size: 1.0em;">API Gateway + AppSync</td>
+                                    <td style="padding: 8px; text-align: right; font-weight: 600;">$75</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #f0f0f0;">
+                                    <td style="padding: 8px; font-size: 1.0em;">CloudFront CDN</td>
+                                    <td style="padding: 8px; text-align: right; font-weight: 600;">$85</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #f0f0f0;">
+                                    <td style="padding: 8px; font-size: 1.0em;">Cognito + Security</td>
+                                    <td style="padding: 8px; text-align: right; font-weight: 600;">$84</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #f0f0f0;">
+                                    <td style="padding: 8px; font-size: 1.0em;">Monitoring & Logs</td>
+                                    <td style="padding: 8px; text-align: right; font-weight: 600;">$31</td>
+                                </tr>
+                                <tr style="border-top: 2px solid #1e3c72; background: #f8f9fa;">
+                                    <td style="padding: 10px; font-weight: 600; color: #1e3c72; font-size: 1.1em;">Infrastructure Total</td>
+                                    <td style="padding: 10px; text-align: right; font-weight: 600; color: #1e3c72; font-size: 1.2em;">$957</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3>🤖 AI & External Service Costs</h3>
+                    <div style="background: white; border-radius: 10px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-bottom: 2px solid #1e3c72;">
+                                    <th style="padding: 10px; text-align: left; color: #1e3c72; font-size: 1.1em;">Service</th>
+                                    <th style="padding: 10px; text-align: right; color: #1e3c72; font-size: 1.1em;">Monthly Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #f0f0f0;">
+                                    <td style="padding: 8px; font-size: 1.0em;">Claude 3.5 Sonnet (20%)</td>
+                                    <td style="padding: 8px; text-align: right; font-weight: 600;">$108</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #f0f0f0;">
+                                    <td style="padding: 8px; font-size: 1.0em;">Claude 3 Haiku (80%)</td>
+                                    <td style="padding: 8px; text-align: right; font-weight: 600;">$36</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #f0f0f0;">
+                                    <td style="padding: 8px; font-size: 1.0em;">AgentCore Runtime</td>
+                                    <td style="padding: 8px; text-align: right; font-weight: 600;">$56</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #f0f0f0;">
+                                    <td style="padding: 8px; font-size: 1.0em;">SERP API (10K searches)</td>
+                                    <td style="padding: 8px; text-align: right; font-weight: 600;">$75</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #f0f0f0;">
+                                    <td style="padding: 8px; font-size: 1.0em;">Visa Payment APIs</td>
+                                    <td style="padding: 8px; text-align: right; font-weight: 600;">$50</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #f0f0f0;">
+                                    <td style="padding: 8px; font-size: 1.0em;">Email & SMS Services</td>
+                                    <td style="padding: 8px; text-align: right; font-weight: 600;">$25</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #f0f0f0;">
+                                    <td style="padding: 8px; font-size: 1.0em;">Third-party Monitoring</td>
+                                    <td style="padding: 8px; text-align: right; font-weight: 600;">$304</td>
+                                </tr>
+                                <tr style="border-top: 2px solid #1e3c72; background: #f8f9fa;">
+                                    <td style="padding: 10px; font-weight: 600; color: #1e3c72; font-size: 1.1em;">Services Total</td>
+                                    <td style="padding: 10px; text-align: right; font-weight: 600; color: #1e3c72; font-size: 1.2em;">$654</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cost Optimization Metrics -->
+            <div class="metrics-grid" style="margin-top: 30px;">
+                <div class="metric-card">
+                    <span class="metric-number">$1,611</span>
+                    <div class="metric-label">Total Monthly Cost (10K Users)</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">$0.16</span>
+                    <div class="metric-label">Cost Per User Per Month</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">63%</span>
+                    <div class="metric-label">AI Cost Savings (Hybrid Model)</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">20%</span>
+                    <div class="metric-label">ARM64 Compute Savings</div>
+                </div>
+            </div>
+
+            <!-- Revenue vs Cost Analysis -->
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h4>💰 Revenue vs Cost Analysis (Per 10K Users)</h4>
+                <div class="three-column">
+                    <div>
+                        <h4 style="color: #28a745;">Revenue Streams</h4>
+                        <ul class="exec-list" style="font-size: 1.0em;">
+                            <li><strong>SaaS Licensing:</strong> $50K/month</li>
+                            <li><strong>Transaction Fees:</strong> $25K/month</li>
+                            <li><strong>Premium Features:</strong> $15K/month</li>
+                            <li><strong>API Access:</strong> $10K/month</li>
+                            <li><strong>Total Revenue:</strong> $100K/month</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: #dc3545;">Cost Breakdown</h4>
+                        <ul class="exec-list" style="font-size: 1.0em;">
+                            <li><strong>Infrastructure:</strong> $957/month</li>
+                            <li><strong>AI Processing:</strong> $200/month</li>
+                            <li><strong>External APIs:</strong> $454/month</li>
+                            <li><strong>Total Costs:</strong> $1,611/month</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: #1e3c72;">Profitability</h4>
+                        <ul class="exec-list" style="font-size: 1.0em;">
+                            <li><strong>Gross Profit:</strong> $98.4K/month</li>
+                            <li><strong>Profit Margin:</strong> 98.4%</li>
+                            <li><strong>ROI:</strong> 6,100%</li>
+                            <li><strong>Payback Period:</strong> 0.5 months</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Component Architecture & Detailed Pricing -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Component Architecture & Detailed Pricing</h2>
+                <div class="slide-number">09</div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>Comprehensive Cost Analysis by Component</h4>
+                <p>Detailed breakdown of all system components with actual AWS pricing and optimization strategies for cost-effective scaling.</p>
+            </div>
+
+            <div class="two-column">
+                <div>
+                    <h3>Core Infrastructure Components</h3>
+                    <div class="exec-card">
+                        <h4>🚀 Compute Layer (ECS Fargate ARM64)</h4>
+                        <ul class="exec-list">
+                            <li><strong>Supervisor Agent:</strong> 2 vCPU, 4GB RAM - $45/month</li>
+                            <li><strong>Shopping MCP Server:</strong> 1 vCPU, 2GB RAM - $22/month</li>
+                            <li><strong>Cart MCP Server:</strong> 1 vCPU, 2GB RAM - $22/month</li>
+                            <li><strong>Auto-scaling (peak):</strong> +10 tasks - $450/month</li>
+                            <li><strong>Load Balancer:</strong> Application LB - $18/month</li>
+                        </ul>
+                        <p><strong>Subtotal: $557/month</strong></p>
+                    </div>
+
+                    <div class="exec-card">
+                        <h4>🧠 AI & ML Services (AWS Bedrock)</h4>
+                        <ul class="exec-list">
+                            <li><strong>Claude 3.5 Sonnet v2:</strong> $15/1M tokens - $540/month</li>
+                            <li><strong>Claude 3 Haiku:</strong> $0.25/1M tokens - $45/month</li>
+                            <li><strong>Hybrid Model Strategy:</strong> 80% Haiku, 20% Sonnet</li>
+                            <li><strong>AgentCore Runtime:</strong> $0.002/invocation - $200/month</li>
+                            <li><strong>Memory Service:</strong> $0.001/operation - $50/month</li>
+                        </ul>
+                        <p><strong>Optimized Total: $200/month (63% savings)</strong></p>
+                    </div>
+
+                    <div class="exec-card">
+                        <h4>💾 Data Storage & Management</h4>
+                        <ul class="exec-list">
+                            <li><strong>DynamoDB (On-demand):</strong> 100K RCU/WCU - $125/month</li>
+                            <li><strong>S3 Standard:</strong> 100GB storage - $23/month</li>
+                            <li><strong>S3 Intelligent Tiering:</strong> Auto-optimization - $12/month</li>
+                            <li><strong>ElastiCache Redis:</strong> t3.micro - $15/month</li>
+                            <li><strong>CloudWatch Logs:</strong> 50GB/month - $25/month</li>
+                        </ul>
+                        <p><strong>Subtotal: $200/month</strong></p>
+                    </div>
+                </div>
+                <div>
+                    <h3>Integration & Security Components</h3>
+                    <div class="exec-card">
+                        <h4>🔐 Authentication & Security</h4>
+                        <ul class="exec-list">
+                            <li><strong>Cognito User Pool:</strong> 10K MAU - $55/month</li>
+                            <li><strong>AWS WAF:</strong> Web ACL + rules - $25/month</li>
+                            <li><strong>Secrets Manager:</strong> 10 secrets - $4/month</li>
+                            <li><strong>Certificate Manager:</strong> SSL certificates - Free</li>
+                            <li><strong>IAM:</strong> Roles and policies - Free</li>
+                        </ul>
+                        <p><strong>Subtotal: $84/month</strong></p>
+                    </div>
+
+                    <div class="exec-card">
+                        <h4>🌐 API & Gateway Services</h4>
+                        <ul class="exec-list">
+                            <li><strong>API Gateway:</strong> 1M requests - $35/month</li>
+                            <li><strong>AppSync (GraphQL):</strong> 1M operations - $40/month</li>
+                            <li><strong>CloudFront CDN:</strong> 1TB transfer - $85/month</li>
+                            <li><strong>Route 53:</strong> DNS queries - $5/month</li>
+                            <li><strong>AgentCore Gateway:</strong> MCP routing - $30/month</li>
+                        </ul>
+                        <p><strong>Subtotal: $195/month</strong></p>
+                    </div>
+
+                    <div class="exec-card">
+                        <h4>🔌 External API Integrations</h4>
+                        <ul class="exec-list">
+                            <li><strong>SERP API:</strong> 10K searches - $75/month</li>
+                            <li><strong>Visa Payment APIs:</strong> 1K transactions - $50/month</li>
+                            <li><strong>AWS SES:</strong> Email notifications - $10/month</li>
+                            <li><strong>AWS SNS:</strong> SMS alerts - $15/month</li>
+                            <li><strong>Third-party monitoring:</strong> DataDog/New Relic - $100/month</li>
+                        </ul>
+                        <p><strong>Subtotal: $250/month</strong></p>
+                    </div>
+
+                    <div class="exec-card">
+                        <h4>📊 Monitoring & Observability</h4>
+                        <ul class="exec-list">
+                            <li><strong>CloudWatch Metrics:</strong> Custom metrics - $30/month</li>
+                            <li><strong>X-Ray Tracing:</strong> 1M traces - $50/month</li>
+                            <li><strong>CloudTrail:</strong> API logging - $20/month</li>
+                            <li><strong>Application Insights:</strong> Performance monitoring - $25/month</li>
+                        </ul>
+                        <p><strong>Subtotal: $125/month</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <span class="metric-number">$1,611</span>
+                    <div class="metric-label">Total Monthly Cost (10K Users)</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">$0.16</span>
+                    <div class="metric-label">Cost Per User Per Month</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">63%</span>
+                    <div class="metric-label">Cost Savings vs Single Model</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">20%</span>
+                    <div class="metric-label">ARM64 Compute Savings</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Cost Optimization & Performance -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Cost Optimization & Performance</h2>
+                <div class="slide-number">10</div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>Multi-Dimensional Cost Optimization Strategy</h4>
+                <p>Strategic technology choices and architectural decisions deliver significant cost savings while maintaining enterprise-grade performance.</p>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <span class="metric-number">20%</span>
+                    <div class="metric-label">Compute Cost Reduction (ARM64)</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">63%</span>
+                    <div class="metric-label">AI Cost Savings (Hybrid Models)</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">40%</span>
+                    <div class="metric-label">Storage Savings (Compression)</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">$5.1K</span>
+                    <div class="metric-label">Total Monthly Cost</div>
+                </div>
+            </div>
+
+            <div class="two-column">
+                <div>
+                    <h3>Optimization Strategies</h3>
+                    <div class="exec-card">
+                        <h4>🚀 ARM64 Migration</h4>
+                        <p>Graviton processors deliver 15% better price/performance with 30% lower power consumption</p>
+                    </div>
+                    <div class="exec-card">
+                        <h4>🧠 Dynamic Model Selection</h4>
+                        <p>Intelligent routing: Haiku for simple queries, Sonnet for complex reasoning</p>
+                    </div>
+                    <div class="exec-card">
+                        <h4>📊 Performance Metrics</h4>
+                        <ul class="exec-list">
+                            <li>&lt;2s end-to-end latency</li>
+                            <li>99.9% API availability</li>
+                            <li>10K concurrent users</li>
+                            <li>100K daily requests</li>
+                        </ul>
+                    </div>
+                </div>
+                <div>
+                    <h3>Monthly Cost Breakdown</h3>
+                    <div class="metrics-grid" style="grid-template-columns: 1fr 1fr;">
+                        <div class="metric-card">
+                            <span class="metric-number">$2.5K</span>
+                            <div class="metric-label">Compute (ECS Fargate)</div>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-number">$1.8K</span>
+                            <div class="metric-label">AI Models (Bedrock)</div>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-number">$800</span>
+                            <div class="metric-label">Storage (DynamoDB + S3)</div>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-number">$5.1K</span>
+                            <div class="metric-label">Total Monthly Cost</div>
+                        </div>
+                    </div>
+                    
+                    <div class="exec-card">
+                        <h4>Key Lessons Learned</h4>
+                        <ul class="exec-list">
+                            <li>Start with observability from day one</li>
+                            <li>Design for failure with circuit breakers</li>
+                            <li>Optimize early - ARM64 saved 20% costs</li>
+                            <li>Continuous improvement via user feedback</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Scaling Economics & ROI Analysis -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Scaling Economics & ROI Analysis</h2>
+                <div class="slide-number">11</div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>Cost Scaling Strategy & Financial Projections</h4>
+                <p>Detailed analysis of how costs scale with user growth and the corresponding revenue impact across different deployment scenarios.</p>
+            </div>
+
+            <div class="two-column">
+                <div>
+                    <h3>Cost Scaling by User Volume</h3>
+                    <div class="roadmap-timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-phase">1K Users - MVP Launch</div>
+                                <div class="timeline-description">
+                                    <strong>Monthly Cost: $485</strong><br>
+                                    • Basic infrastructure: $300<br>
+                                    • AI processing: $85<br>
+                                    • External APIs: $100<br>
+                                    • Cost per user: $0.49/month
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-phase">10K Users - Growth Phase</div>
+                                <div class="timeline-description">
+                                    <strong>Monthly Cost: $1,611</strong><br>
+                                    • Scaled infrastructure: $957<br>
+                                    • AI processing: $200<br>
+                                    • External APIs: $454<br>
+                                    • Cost per user: $0.16/month
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-phase">100K Users - Scale Phase</div>
+                                <div class="timeline-description">
+                                    <strong>Monthly Cost: $8,750</strong><br>
+                                    • Auto-scaled infrastructure: $5,200<br>
+                                    • AI processing: $1,800<br>
+                                    • External APIs: $1,750<br>
+                                    • Cost per user: $0.09/month
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-phase">1M Users - Enterprise Scale</div>
+                                <div class="timeline-description">
+                                    <strong>Monthly Cost: $45,000</strong><br>
+                                    • Enterprise infrastructure: $28,000<br>
+                                    • AI processing: $12,000<br>
+                                    • External APIs: $5,000<br>
+                                    • Cost per user: $0.045/month
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3>Revenue Impact Analysis</h3>
+                    <div class="exec-card">
+                        <h4>💰 Revenue Streams</h4>
+                        <ul class="exec-list">
+                            <li><strong>SaaS Licensing:</strong> $5-50/user/month</li>
+                            <li><strong>Transaction Fees:</strong> 2.5% of GMV</li>
+                            <li><strong>Premium Features:</strong> $10-25/user/month</li>
+                            <li><strong>API Access:</strong> $0.01-0.10/call</li>
+                            <li><strong>Data Insights:</strong> $1,000-10,000/month</li>
+                        </ul>
+                    </div>
+
+                    <div class="metrics-grid" style="grid-template-columns: 1fr 1fr;">
+                        <div class="metric-card">
+                            <span class="metric-number">25%</span>
+                            <div class="metric-label">Conversion Rate Increase</div>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-number">40%</span>
+                            <div class="metric-label">Average Order Value Lift</div>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-number">60%</span>
+                            <div class="metric-label">Customer Service Cost Reduction</div>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-number">285%</span>
+                            <div class="metric-label">3-Year ROI</div>
+                        </div>
+                    </div>
+
+                    <div class="exec-card">
+                        <h4>📊 Financial Projections (3-Year)</h4>
+                        <div class="three-column">
+                            <div>
+                                <h4>Year 1</h4>
+                                <ul class="exec-list">
+                                    <li>Users: 10K → 50K</li>
+                                    <li>Revenue: $2.4M</li>
+                                    <li>Costs: $850K</li>
+                                    <li>Profit: $1.55M</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4>Year 2</h4>
+                                <ul class="exec-list">
+                                    <li>Users: 50K → 200K</li>
+                                    <li>Revenue: $12M</li>
+                                    <li>Costs: $3.2M</li>
+                                    <li>Profit: $8.8M</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4>Year 3</h4>
+                                <ul class="exec-list">
+                                    <li>Users: 200K → 1M</li>
+                                    <li>Revenue: $48M</li>
+                                    <li>Costs: $12M</li>
+                                    <li>Profit: $36M</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="exec-card">
+                        <h4>🎯 Key Success Metrics</h4>
+                        <ul class="exec-list">
+                            <li><strong>Customer LTV:</strong> $2,400 (3x industry average)</li>
+                            <li><strong>Payback Period:</strong> 8 months</li>
+                            <li><strong>Gross Margin:</strong> 75% (SaaS model)</li>
+                            <li><strong>Churn Rate:</strong> <5% monthly (AI stickiness)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Future Roadmap & Technology Evolution -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Future Roadmap & Technology Evolution</h2>
+                <div class="slide-number">12</div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>Strategic Technology Roadmap for Market Leadership</h4>
+                <p>Comprehensive enhancement plan to maintain competitive advantage and expand market reach through innovative features and global scalability.</p>
+            </div>
+
+            <div class="roadmap-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-phase">Q1-Q2 2025: Foundation Enhancement</div>
+                        <div class="timeline-description">
+                            <strong>Core Platform Optimization:</strong><br>
+                            • Real Visa API integration and PCI DSS certification<br>
+                            • Mobile app development (iOS/Android)<br>
+                            • Voice interface integration (Alexa, Google Assistant)<br>
+                            • Performance optimization and caching layer<br>
+                            • Advanced analytics and user behavior tracking
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-phase">Q3-Q4 2025: Intelligence & Personalization</div>
+                        <div class="timeline-description">
+                            <strong>AI-Powered Features:</strong><br>
+                            • Multi-language support (Spanish, French, German)<br>
+                            • Advanced ML recommendation engine<br>
+                            • Predictive inventory management<br>
+                            • Social shopping and collaborative features<br>
+                            • Real-time price monitoring and alerts
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-phase">2026: Next-Generation Commerce</div>
+                        <div class="timeline-description">
+                            <strong>Emerging Technologies:</strong><br>
+                            • AR/VR shopping experiences<br>
+                            • Blockchain-based loyalty programs<br>
+                            • IoT device integration (smart home, wearables)<br>
+                            • Global marketplace expansion<br>
+                            • Autonomous supply chain optimization
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="two-column">
+                <div class="exec-card">
+                    <h4>🚀 Platform Expansion Opportunities</h4>
+                    <ul class="exec-list">
+                        <li><strong>Multi-channel Deployment:</strong> Web, mobile, voice, IoT</li>
+                        <li><strong>Vertical Specialization:</strong> Fashion, electronics, groceries</li>
+                        <li><strong>B2B Commerce:</strong> Enterprise procurement solutions</li>
+                        <li><strong>Global Markets:</strong> Localization for 20+ countries</li>
+                        <li><strong>White-label Solutions:</strong> Customizable for retailers</li>
+                    </ul>
+                </div>
+                <div class="exec-card">
+                    <h4>💼 Revenue Diversification Strategy</h4>
+                    <ul class="exec-list">
+                        <li><strong>SaaS Licensing:</strong> Tiered pricing for different markets</li>
+                        <li><strong>Transaction Revenue:</strong> Percentage of GMV processed</li>
+                        <li><strong>Premium Features:</strong> Advanced analytics and insights</li>
+                        <li><strong>API Monetization:</strong> Third-party developer ecosystem</li>
+                        <li><strong>Data Services:</strong> Anonymized market intelligence</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <span class="metric-number">$150M</span>
+                    <div class="metric-label">Projected 3-Year Revenue</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">20+</span>
+                    <div class="metric-label">Target Global Markets</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">5M</span>
+                    <div class="metric-label">Target User Base by 2027</div>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">75%</span>
+                    <div class="metric-label">Projected Market Share</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Conclusion & Next Steps -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Conclusion & Next Steps</h2>
+                <div class="slide-number">13</div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>Strategic Roadmap for Market Leadership</h4>
+                <p>Comprehensive enhancement plan to maintain competitive advantage and expand market reach through innovative features and global scalability.</p>
+            </div>
+
+            <div class="roadmap-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-phase">Short-term (3-6 months)</div>
+                        <div class="timeline-description">Real Visa integration, mobile app, voice interface, performance optimization</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-phase">Medium-term (6-12 months)</div>
+                        <div class="timeline-description">Multi-language support, ML recommendations, inventory management, social shopping</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-phase">Long-term (1-2 years)</div>
+                        <div class="timeline-description">AR/VR shopping, blockchain payments, IoT integration, global marketplace</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="two-column">
+                <div class="exec-card">
+                    <h4>Platform Expansion</h4>
+                    <ul class="exec-list">
+                        <li>Multi-channel deployment capabilities</li>
+                        <li>Voice and AR interface integration</li>
+                        <li>IoT device connectivity</li>
+                        <li>Social commerce features</li>
+                    </ul>
+                </div>
+                <div class="exec-card">
+                    <h4>Revenue Opportunities</h4>
+                    <ul class="exec-list">
+                        <li>SaaS licensing to retailers</li>
+                        <li>Transaction-based revenue sharing</li>
+                        <li>Premium feature subscriptions</li>
+                        <li>Data insights and analytics services</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Thank You -->
+        <div class="slide title-slide">
+            <h1>Thank You</h1>
+            <p class="subtitle">Questions & Discussion</p>
+            
+            <div class="two-column" style="margin-top: 50px;">
+                <div class="exec-card">
+                    <h4>🚀 Ready to Transform E-commerce</h4>
+                    <p>AgentCore AI Shopping Concierge represents the future of conversational commerce, combining cutting-edge AI with secure payment processing.</p>
+                </div>
+                <div class="exec-card">
+                    <h4>📈 Key Takeaways</h4>
+                    <ul class="exec-list">
+                        <li>285% projected 3-year ROI</li>
+                        <li>$0.16 cost per user at scale</li>
+                        <li>Enterprise-grade security & compliance</li>
+                        <li>First-mover advantage in agentic commerce</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 40px;">
+                <h4>🎯 Next Steps</h4>
+                <div class="three-column">
+                    <div>
+                        <h4>Technical Review</h4>
+                        <p>Deep dive into architecture and implementation details</p>
+                    </div>
+                    <div>
+                        <h4>Business Planning</h4>
+                        <p>Finalize go-to-market strategy and resource allocation</p>
+                    </div>
+                    <div>
+                        <h4>Partnership Development</h4>
+                        <p>Establish key integrations and strategic alliances</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="company-tagline" style="margin-top: 50px;">
+                <p><strong>AgentCore AI Shopping Concierge</strong></p>
+                <p>The Future of Conversational Commerce</p>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <span class="slide-counter">
+                <span id="currentSlide">1</span> / <span id="totalSlides">14</span>
+            </span>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        let slides = [];
+        let totalSlides = 0;
+        
+        // Initialize everything when DOM is ready
+        function initializePresentation() {
+            slides = document.querySelectorAll('.slide');
+            totalSlides = slides.length;
+            
+            console.log('Total slides found:', totalSlides);
+            console.log('Slides:', slides);
+            
+            // Update total slides display
+            const totalSlidesElement = document.getElementById('totalSlides');
+            if (totalSlidesElement) {
+                totalSlidesElement.textContent = totalSlides;
+            }
+            
+            // Create slide indicators
+            createSlideIndicators();
+            
+            // Show first slide
+            showSlide(1);
+            
+            console.log('Presentation initialized successfully');
+        }
+        
+        function createSlideIndicators() {
+            const indicatorsContainer = document.getElementById('slideIndicators');
+            if (!indicatorsContainer) return;
+            
+            indicatorsContainer.innerHTML = '';
+            
+            for (let i = 1; i <= totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'slide-dot';
+                dot.onclick = () => showSlide(i);
+                dot.title = `Go to slide ${i}`;
+                indicatorsContainer.appendChild(dot);
+            }
+        }
+        
+        function updateProgress() {
+            const progressBar = document.getElementById('progressBar');
+            if (progressBar) {
+                const progress = (currentSlide / totalSlides) * 100;
+                progressBar.style.width = progress + '%';
+            }
+        }
+        
+        function updateIndicators() {
+            const dots = document.querySelectorAll('.slide-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 === currentSlide);
+            });
+        }
+        
+        function showSlide(n) {
+            console.log('Attempting to show slide:', n, 'Total slides:', totalSlides);
+            
+            if (n > totalSlides) {
+                n = totalSlides;
+            }
+            if (n < 1) {
+                n = 1;
+            }
+            
+            // Hide all slides first
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                slide.style.display = 'none';
+                console.log('Hiding slide', index + 1);
+            });
+            
+            // Show the target slide
+            if (slides[n - 1]) {
+                slides[n - 1].classList.add('active');
+                slides[n - 1].style.display = 'block';
+                console.log('Showing slide', n);
+            }
+            
+            currentSlide = n;
+            
+            // Update slide counter
+            const currentSlideElement = document.getElementById('currentSlide');
+            if (currentSlideElement) {
+                currentSlideElement.textContent = currentSlide;
+            }
+            
+            // Update button states
+            updateButtonStates();
+            updateProgress();
+            updateIndicators();
+        }
+        
+        function updateButtonStates() {
+            // Navigation buttons removed - only update arrow buttons
+            const prevArrow = document.getElementById('prevArrow');
+            const nextArrow = document.getElementById('nextArrow');
+            
+            const isFirst = (currentSlide === 1);
+            const isLast = (currentSlide === totalSlides);
+            
+            if (prevArrow) prevArrow.disabled = isFirst;
+            if (nextArrow) nextArrow.disabled = isLast;
+        }
+        
+        function changeSlide(direction) {
+            console.log('Changing slide by:', direction, 'Current:', currentSlide);
+            const newSlide = currentSlide + direction;
+            showSlide(newSlide);
+        }
+        
+        // Global functions for button clicks
+        window.changeSlide = changeSlide;
+        window.showSlide = showSlide;
+        
+        // Image modal functions
+        window.openImageModal = function(src, alt) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            
+            if (modal && modalImage) {
+                modalImage.src = src;
+                modalImage.alt = alt;
+                modal.classList.add('show');
+                
+                // Prevent slide navigation while modal is open
+                document.body.style.overflow = 'hidden';
+            }
+        };
+        
+        window.closeImageModal = function() {
+            const modal = document.getElementById('imageModal');
+            if (modal) {
+                modal.classList.remove('show');
+                document.body.style.overflow = 'auto';
+            }
+        };
+        
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeImageModal();
+            }
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
+                event.preventDefault();
+                changeSlide(-1);
+            } else if (event.key === 'ArrowRight' || event.key === 'PageDown') {
+                event.preventDefault();
+                changeSlide(1);
+            } else if (event.key === 'Home') {
+                event.preventDefault();
+                showSlide(1);
+            } else if (event.key === 'End') {
+                event.preventDefault();
+                showSlide(totalSlides);
+            }
+        });
+
+        // Mouse wheel navigation - simplified to allow normal scrolling
+        let wheelTimeout;
+        document.addEventListener('wheel', function(event) {
+            // Only handle slide navigation with Ctrl+wheel or when specifically intended
+            if (event.ctrlKey) {
+                event.preventDefault();
+                
+                // Debounce wheel events to prevent rapid scrolling
+                clearTimeout(wheelTimeout);
+                wheelTimeout = setTimeout(() => {
+                    if (event.deltaY > 0) {
+                        // Scroll down - next slide
+                        changeSlide(1);
+                    } else if (event.deltaY < 0) {
+                        // Scroll up - previous slide
+                        changeSlide(-1);
+                    }
+                }, 150);
+            }
+            // Otherwise, allow normal scrolling within the slide
+        });
+
+        // Touch/swipe navigation for mobile
+        let touchStartX = 0;
+        let touchStartY = 0;
+        
+        document.addEventListener('touchstart', function(event) {
+            touchStartX = event.touches[0].clientX;
+            touchStartY = event.touches[0].clientY;
+        });
+        
+        document.addEventListener('touchend', function(event) {
+            if (!touchStartX || !touchStartY) return;
+            
+            const touchEndX = event.changedTouches[0].clientX;
+            const touchEndY = event.changedTouches[0].clientY;
+            
+            const deltaX = touchStartX - touchEndX;
+            const deltaY = touchStartY - touchEndY;
+            
+            // Minimum swipe distance
+            const minSwipeDistance = 50;
+            
+            if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                // Horizontal swipe
+                if (Math.abs(deltaX) > minSwipeDistance) {
+                    if (deltaX > 0) {
+                        // Swipe left - next slide
+                        changeSlide(1);
+                    } else {
+                        // Swipe right - previous slide
+                        changeSlide(-1);
+                    }
+                }
+            } else {
+                // Vertical swipe
+                if (Math.abs(deltaY) > minSwipeDistance) {
+                    if (deltaY > 0) {
+                        // Swipe up - next slide
+                        changeSlide(1);
+                    } else {
+                        // Swipe down - previous slide
+                        changeSlide(-1);
+                    }
+                }
+            }
+            
+            touchStartX = 0;
+            touchStartY = 0;
+        });
+        
+        // Initialize when DOM is loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializePresentation);
+        } else {
+            initializePresentation();
+        }
+        
+        // Fallback initialization
+        setTimeout(initializePresentation, 500);
+    </script>
+</body>
+</html>

@@ -726,3 +726,37 @@ After successful deployment:
 - [AWS CDK Documentation](https://docs.aws.amazon.com/cdk/)
 - [Bedrock AgentCore Documentation](https://docs.aws.amazon.com/bedrock-agentcore/)
 - [Amplify Documentation](https://docs.amplify.aws/)
+
+
+# Install Git
+sudo yum update -y && sudo yum install -y git
+
+# Clone repository (replace URL)
+git clone https://github.com/YogeshAbnave/project-presentation.git
+cd shopping-concierge-agent/PPT
+
+# Start Python server
+python3 -m http.server 8000
+
+# Get your public IP
+echo "Access at: http://$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4):8000/index.html"
+
+
+
+# Install Git
+sudo yum update -y && sudo yum install -y git
+
+# Clone repository
+git clone https://github.com/YogeshAbnave/project-presentation.git
+
+# Navigate to the correct directory (based on the repo structure)
+cd project-presentation/PPT
+
+# Check what files are available
+ls -la
+
+# Start Python server persistently (won't stop when you logout)
+nohup python3 -m http.server 8000 > server.log 2>&1 &
+
+# Get your public IP and show access URL
+echo "Access at: http://$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4):8000/index.html"
