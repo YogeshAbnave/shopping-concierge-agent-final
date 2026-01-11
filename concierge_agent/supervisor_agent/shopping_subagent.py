@@ -79,7 +79,7 @@ def get_shopping_tools_client() -> MCPClient:
 # =============================================================================
 
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-5-sonnet-20241022-v2:0",
+    model_id="us.anthropic.claude-sonnet-4-5-20250929-v1:0",
     region_name=REGION,
     temperature=0.2,
 )
