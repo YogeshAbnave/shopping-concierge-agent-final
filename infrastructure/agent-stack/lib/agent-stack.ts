@@ -109,13 +109,13 @@ export class AgentStack extends cdk.Stack {
     // 1. Create Memory using L2 construct
     const memory = new agentcore.Memory(this, 'Memory', {
       memoryName: sanitizeName(`memory_${this.stackName}`),
-      description: 'Short-term memory for Concierge Agent',
+      description: 'Short-term memory for Trade IQ ',
     });
 
     // 2. Create execution role for main agent
     const agentRole = new iam.Role(this, 'AgentRole', {
       assumedBy: new iam.ServicePrincipal('bedrock-agentcore.amazonaws.com'),
-      description: 'Execution role for Concierge Agent'
+      description: 'Execution role for Trade IQ '
     });
 
     // Grant DynamoDB permissions
@@ -212,7 +212,7 @@ export class AgentStack extends cdk.Stack {
         [clientId, machineClientId]  // Accept user tokens (frontend) AND M2M tokens (gateway)
       ),
       environmentVariables: baseEnvVars,
-      description: 'Concierge Agent Runtime'
+      description: 'Trade IQ  Runtime'
     });
 
     // 6. Create Gateway with JWT inbound and OAuth outbound

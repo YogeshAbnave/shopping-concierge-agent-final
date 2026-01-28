@@ -591,7 +591,7 @@ cat > package.json << 'EOF'
 {
   "name": "sample-concierge-agent",
   "version": "1.0.0",
-  "description": "AI agent streaming UI for concierge agent with AWS Amplify",
+  "description": "AI agent streaming UI for Trade IQ  with AWS Amplify",
   "type": "module",
   "scripts": {
     "dev": "npm run dev --workspace=web-ui",

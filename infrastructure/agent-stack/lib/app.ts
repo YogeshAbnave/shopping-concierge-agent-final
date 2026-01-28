@@ -15,7 +15,7 @@ new AgentStack(app, `AgentStack-${DEPLOYMENT_ID}`, {
     account: process.env.CDK_DEFAULT_ACCOUNT,
     region: process.env.CDK_DEFAULT_REGION || 'us-east-1'
   },
-  description: `Concierge Agent with Gateway - Main agent runtime, memory, and gateway with MCP targets (${DEPLOYMENT_ID})`
+  description: `Trade IQ  with Gateway - Main agent runtime, memory, and gateway with MCP targets (${DEPLOYMENT_ID})`
 });
 
 app.synth();

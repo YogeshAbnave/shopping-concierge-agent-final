@@ -51,7 +51,7 @@ export class FrontendStack extends cdk.Stack {
     // Create Amplify app
     this.amplifyApp = new amplify.App(this, 'AmplifyApp', {
       appName: 'concierge-agent-frontend',
-      description: 'Concierge Agent - React/Vite Frontend',
+      description: 'Trade IQ  - React/Vite Frontend',
       platform: amplify.Platform.WEB,
     });
 

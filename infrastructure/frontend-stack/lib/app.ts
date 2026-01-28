@@ -15,7 +15,7 @@ new FrontendStack(app, `FrontendStack-${DEPLOYMENT_ID}`, {
     account: process.env.CDK_DEFAULT_ACCOUNT,
     region: process.env.CDK_DEFAULT_REGION || 'us-east-1'
   },
-  description: `Concierge Agent Frontend - Amplify Hosting (${DEPLOYMENT_ID})`
+  description: `Trade IQ  Frontend - Amplify Hosting (${DEPLOYMENT_ID})`
 });
 
 app.synth();

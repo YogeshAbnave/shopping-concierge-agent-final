@@ -199,8 +199,7 @@ const AppWithSessions = ({ user, onSignOut }: AppWithSessionsProps) => {
       <div className="flex flex-col h-screen">
         <header className="bg-white text-gray-800 px-6 py-4 flex items-center justify-between border-b border-gray-200">
           <div className="flex items-center gap-3">
-            <img src="/VISA-Logo-2006.png" alt="Visa" className="h-8" />
-            <h1 className="text-xl font-semibold text-[#0a3a7a]">Concierge Agent</h1>
+            <h1 className="text-xl font-semibold text-[#0a3a7a]">Trade IQ</h1>
           </div>
         </header>
         <div className="flex-1 flex flex-col items-center justify-center gap-4 text-white">
@@ -235,8 +234,7 @@ const AppWithSessions = ({ user, onSignOut }: AppWithSessionsProps) => {
       {/* Header */}
       <header className="bg-[#1a1f71] text-white px-6 py-3 flex items-center justify-between z-10">
         <div className="flex items-center gap-3">
-          <img src="/VISA-Logo-2006.png" alt="Visa" className="h-8" />
-          <h1 className="text-xl font-semibold">Concierge Agent</h1>
+          <h1 className="text-xl font-semibold">Trade IQ</h1>
         </div>
         <div className="flex items-center gap-3">
           <span className="text-sm text-white/80">Welcome, {displayName}!</span>

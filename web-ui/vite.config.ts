@@ -11,7 +11,7 @@ export default defineConfig({
   server: {
     https: true,
     port: 9000,
-    host: 'vcas.local.com',  // Visa whitelisted domain
+    host: 'localhost',  // Changed from vcas.local.com for local development
     // Proxy removed - now using Lambda API Gateway directly via VITE_VISA_PROXY_URL
     // proxy: {
     //   '/api/visa': {

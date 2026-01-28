@@ -1,6 +1,6 @@
 # Shopping Agent Overview
 
-AI-powered concierge agent with shopping assistance capabilities, built with AWS Bedrock AgentCore, Amplify, and React.
+AI-powered Trade IQ  with shopping assistance capabilities, built with AWS Bedrock AgentCore, Amplify, and React.
 
 The shopping assistant specializes in all shop-related queries including reviews research, feature information, and personalized recommendations based on user profile. It compares items, gives you prices, shows reviews, and ensures that all items are aligned with user preferences and constraints.
 

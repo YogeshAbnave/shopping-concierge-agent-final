@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Concierge Agent system consists of three specialized agents working together to provide comprehensive shopping assistance and purchase management:
+The Trade IQ  system consists of three specialized agents working together to provide comprehensive shopping assistance and purchase management:
 
 1. **Supervisor Agent** - Main orchestrator that coordinates all interactions
 2. **Shopping Assistant** - Handles product search and recommendations

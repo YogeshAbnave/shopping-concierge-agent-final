@@ -1,6 +1,6 @@
 # Agent Infrastructure
 
-CDK infrastructure for deploying the Concierge Agent system with AWS Bedrock AgentCore.
+CDK infrastructure for deploying the Trade IQ  system with AWS Bedrock AgentCore.
 
 This directory contains three separate CDK applications that deploy the agent infrastructure:
 
