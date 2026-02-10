@@ -356,7 +356,7 @@ const PurchaseConfirmation = ({ userEmail, userId, cartItems, onComplete, onErro
           instructionId: transactionId,  // From step 4
           vProvisionedTokenId: vProvisionedTokenId,
           merchantUrl: 'https://www.example.com',  // You may want to make this configurable
-          merchantName: 'Travel Concierge',
+          merchantName: 'TradeIQ',
           transactionAmount: totalAmount,
           user_id: userId
         })
